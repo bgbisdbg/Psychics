@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Магия</title>
+</head>
+<body>
+    <h1>Здравствуйте</h1>
+    <p>
+        Я предлагаю вам поучаствовать в уникальном проекте по проверке наших экстрасенсов.
+    </p>
+    <p>
+        Если вы готовы, нажмите "Да", а если нет, то вы так и не откроете этот удивительный мир тайн.
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button name="yes" type="submit">Да</button>
+        <button name="no" type="submit">Нет</button>
+    </form>
+</body>
+</html>

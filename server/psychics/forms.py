@@ -1,8 +1,9 @@
 from django import forms
 
+
 class UserNumberForm(forms.Form):
     user_number = forms.IntegerField(
-        label='Enter the number you thought of',
+        label='Введите число, которое вы загадали',
         min_value=10,
         max_value=99,
         error_messages={

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Достоверность экстрасенсов</title>
+</head>
+<body>
+    {% if psychics %}
+        <h2>Достоверность экстрасенсов</h2>
+        <p>Изначальный рейтинг экстрасенсов — 50.</p>
+        <p>Если они угадывают, то их рейтинг увеличивается на 1; если нет, то уменьшается на 1.</p>
+        <ul>
+            {% for psychic in psychics %}
+                <li>{{ psychic.name }}: {{ psychic.reliability }}</li>
+            {% endfor %}
+        </ul>
+
+        <form method="post">
+            {% csrf_token %}
+            <button name="repeat" type="submit">Повторим?</button>
+        </form>
+        <form method="post">
+            {% csrf_token %}
+            <button name="finish" type="submit">Закончим?</button>
+        </form>
+    {% endif %}
+</body>
+</html>

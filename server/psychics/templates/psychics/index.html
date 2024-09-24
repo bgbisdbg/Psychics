@@ -5,26 +5,17 @@
     <title>Тестирование экстрасенсов</title>
 </head>
 <body>
-    <h1>Тестирование экстрасенсов</h1>
-    <p>Пожалуйста, загадайте двухзначное число.</p>
-    <p><strong>Порядок действий:</strong></p>
-    <ol>
-        <li>Загадайте двухзначное число.</li>
-        <li>Нажмите кнопку "Я загадал число".</li>
-        <li>Посмотрите на догадки экстрасенсов.</li>
-        <li>Введите загаданное число и нажмите "Отправить".</li>
-        <li>Повторяйте процесс бесконечно.</li>
-    </ol>
-    <form method="post">
-        {% csrf_token %}
-        <button name="confirm" type="submit">Я загадал число</button>
-    </form>
-
     {% if psychics %}
         <h2>Догадки экстрасенсов</h2>
         <ul>
             {% for psychic in psychics %}
-                <li>{{ psychic.name }}: {{ psychic.guesses|last }}</li>
+                <li>{{ psychic.name }}:
+                    {% if psychic.guesses %}
+                        {{ psychic.guesses|last }}
+                    {% else %}
+                        Еще не сделал предположений
+                    {% endif %}
+                </li>
             {% endfor %}
         </ul>
 
@@ -34,32 +25,6 @@
             <button name="submit_number" type="submit">Отправить</button>
         </form>
 
-        <form method="post">
-            {% csrf_token %}
-            <button name="clear_history" type="submit">Очистить историю</button>
-        </form>
     {% endif %}
-
-    <h2>История</h2>
-    <h3>Введенные числа</h3>
-    <ul>
-        {% for number in user_numbers %}
-            <li>{{ number }}</li>
-        {% endfor %}
-    </ul>
-
-    <h3>Догадки экстрасенсов</h3>
-    <ul>
-        {% for psychic in psychics %}
-            <li>{{ psychic.name }}: {{ psychic.guesses }}</li>
-        {% endfor %}
-    </ul>
-
-    <h3>Достоверность</h3>
-    <ul>
-        {% for psychic in psychics %}
-            <li>{{ psychic.name }}: {{ psychic.reliability }}</li>
-        {% endfor %}
-    </ul>
 </body>
 </html>
