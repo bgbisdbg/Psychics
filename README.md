@@ -33,15 +33,22 @@
    
 2. Запускаем Docker и в комндной консоли
 
-   ```bash
+
+Сборка
+
+```bash
   docker -t psychic_test_image .
-   ```
+ ```
+
+
  Для сборке образа
 
  и
 
-    ```bash
- запуск docker -d -p 8000:8000 --имя psychic_test_container psychic_test_image
-   ```
+Запуск
 
- Для запуска проекта
+ ```bash
+ docker -d -p 8000:8000 --имя psychic_test_container psychic_test_image
+  ```
+
+
