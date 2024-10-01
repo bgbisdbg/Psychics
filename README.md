@@ -37,7 +37,7 @@
 Сборка
 
 ```bash
-  docker -t psychic_test_image .
+docker psychic_test_image .
  ```
 
 
