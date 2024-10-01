@@ -48,7 +48,7 @@ docker build -t psychic_test_image .
 Запуск
 
  ```bash
- docker -d -p 8000:8000 --имя psychic_test_container psychic_test_image
+docker run -d -p 8000:8000 --name psychic_test_container psychic_test_image
   ```
 
 
