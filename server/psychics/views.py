@@ -83,6 +83,11 @@ class Index(TemplateView):
                 psychic.reliability = 50
             return redirect('about')
 
+        elif 'clear_history' in request.POST:
+            del request.session['psychics']
+            del request.session['user_numbers']
+            return redirect('index')
+
         request.session['psychics'] = [p.to_dict() for p in psychics]
         request.session['user_numbers'] = user_numbers
         return redirect('index')
@@ -112,6 +117,11 @@ class Reliability(TemplateView):
 
         elif 'repeat' in request.POST:
             return redirect('about')
+
+        elif 'clear_history' in request.POST:
+            del request.session['psychics']
+            del request.session['user_numbers']
+            return redirect('index')
 
 
 class Finish(TemplateView):
