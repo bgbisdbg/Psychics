@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 
 from .forms import UserNumberForm
 from .psychic import Psychic
+from .psychic_manager import PsychicManager
 
 
 class Start(TemplateView):
@@ -35,19 +36,18 @@ class Index(TemplateView):
     def get(self, request, *args, **kwargs):
         if 'psychics' not in request.session:
             psychics = [Psychic('Экстра-Саня'), Psychic('Всевидящий Борис')]
-            request.session['psychics'] = [p.to_dict() for p in psychics]
+            request.session['psychics'] = PsychicManager(psychics).to_dict()
             request.session['user_numbers'] = []
 
-        psychics = [Psychic.from_dict(p) for p in request.session['psychics']]
+        psychic_manager = PsychicManager.from_dict(request.session['psychics'])
         user_numbers = request.session['user_numbers']
 
-        for psychic in psychics:
-            psychic.make_guess()
-        request.session['psychics'] = [p.to_dict() for p in psychics]
+        psychic_manager.make_guesses()
+        request.session['psychics'] = psychic_manager.to_dict()
 
         form = UserNumberForm()
         return render(request, self.template_name, {
-            'psychics': psychics,
+            'psychics': psychic_manager.psychics,
             'user_numbers': user_numbers,
             'form': form,
         })
@@ -56,7 +56,7 @@ class Index(TemplateView):
         if 'psychics' not in request.session:
             return redirect('index')
 
-        psychics = [Psychic.from_dict(p) for p in request.session['psychics']]
+        psychic_manager = PsychicManager.from_dict(request.session['psychics'])
         user_numbers = request.session['user_numbers']
 
         if 'submit_number' in request.POST:
@@ -64,22 +64,20 @@ class Index(TemplateView):
             if form.is_valid():
                 user_number = form.cleaned_data['user_number']
                 user_numbers.append(user_number)
-                for psychic in psychics:
-                    psychic.update_reliability(user_number)
-                request.session['psychics'] = [p.to_dict() for p in psychics]
+                psychic_manager.update_reliability(user_number)
+                request.session['psychics'] = psychic_manager.to_dict()
                 request.session['user_numbers'] = user_numbers
                 return redirect('reliability')
             else:
                 return render(request, self.template_name, {
-                    'psychics': psychics,
+                    'psychics': psychic_manager.psychics,
                     'user_numbers': user_numbers,
                     'form': form,
                 })
 
         elif 'repeat' in request.POST:
             request.session['user_numbers'] = []
-            for psychic in psychics:
-                psychic.reset()
+            psychic_manager.reset_psychics()
             return redirect('about')
 
         elif 'clear_history' in request.POST:
@@ -87,10 +85,9 @@ class Index(TemplateView):
             del request.session['user_numbers']
             return redirect('index')
 
-        request.session['psychics'] = [p.to_dict() for p in psychics]
+        request.session['psychics'] = psychic_manager.to_dict()
         request.session['user_numbers'] = user_numbers
         return redirect('index')
-
 
 class Reliability(TemplateView):
     template_name = 'psychics/reliability.html'
@@ -99,11 +96,11 @@ class Reliability(TemplateView):
         if 'psychics' not in request.session:
             return redirect('index')
 
-        psychics = [Psychic.from_dict(p) for p in request.session['psychics']]
+        psychic_manager = PsychicManager.from_dict(request.session['psychics'])
         user_numbers = request.session['user_numbers']
 
         return render(request, self.template_name, {
-            'psychics': psychics,
+            'psychics': psychic_manager.psychics,
             'user_numbers': user_numbers,
         })
 
@@ -120,7 +117,6 @@ class Reliability(TemplateView):
             del request.session['psychics']
             del request.session['user_numbers']
             return redirect('index')
-
 
 class Finish(TemplateView):
     template_name = 'psychics/finish.html'
