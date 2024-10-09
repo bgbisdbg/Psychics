@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 
-from .psychic import Psychic
 from .forms import UserNumberForm
+from .psychic import Psychic
 
 
 class Start(TemplateView):
@@ -79,8 +79,7 @@ class Index(TemplateView):
         elif 'repeat' in request.POST:
             request.session['user_numbers'] = []
             for psychic in psychics:
-                psychic.guesses = []
-                psychic.reliability = 50
+                psychic.reset()
             return redirect('about')
 
         elif 'clear_history' in request.POST:
@@ -109,7 +108,6 @@ class Reliability(TemplateView):
         })
 
     def post(self, request):
-
         if 'finish' in request.POST:
             del request.session['psychics']
             del request.session['user_numbers']

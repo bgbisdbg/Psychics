@@ -1,6 +1,5 @@
 import random
 
-
 class Psychic:
     def __init__(self, name):
         self.name = name
@@ -17,6 +16,10 @@ class Psychic:
             self.reliability += 1
         else:
             self.reliability -= 1
+
+    def reset(self):
+        self.guesses = []
+        self.reliability = 50
 
     def to_dict(self):
         return {
